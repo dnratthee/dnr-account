@@ -1,2 +1,2 @@
-# dnr-account
-DNR-Account Invoicing and Accounting software
+# DNR-Account
+Invoicing and Accounting software

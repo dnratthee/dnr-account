@@ -1,0 +1,25 @@
+{
+  "name": "dnr-account",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dnratthee/dnr-account.git"
+  },
+  "keywords": [
+    "DNRatthee",
+    "DNR",
+    "Account",
+    "Invoicing"
+  ],
+  "author": "Ratthe Jarathbenjawong <dev@dnratthee.me>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dnratthee/dnr-account/issues"
+  },
+  "homepage": "https://github.com/dnratthee/dnr-account#readme"
+}

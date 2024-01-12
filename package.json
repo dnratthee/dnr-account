@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "repository": {
     "type": "git",
@@ -16,10 +19,20 @@
     "Account",
     "Invoicing"
   ],
-  "author": "Ratthe Jarathbenjawong <dev@dnratthee.me>",
+  "author": "Ratthee Jarathbenjawong <dev@dnratthee.me>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/dnratthee/dnr-account/issues"
   },
-  "homepage": "https://github.com/dnratthee/dnr-account#readme"
+  "homepage": "https://github.com/dnratthee/dnr-account#readme",
+  "dependencies": {
+    "next": "^14.0.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.0",
+    "@types/react": "18.2.47",
+    "typescript": "5.3.3"
+  }
 }

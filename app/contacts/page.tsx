@@ -3,9 +3,9 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "DNR Account :: Dashboard",
+  title: "DNR Account :: Contact",
 };
 
 export default function Page() {
-  return <h1>Hello, Dashboard Page!</h1>;
+  return <h1>Hello, Contact Page!</h1>;
 }

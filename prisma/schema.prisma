@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int            @id @default(autoincrement())
+  email      String         @unique
+  firstName  String?
+  lastName   String?
+  phone      String?
+  password   String?
+  role       Role           @relation(fields: [roleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  roleId     Int
+  sign       Bytes?
+  company    CompanyBranch? @relation(fields: [companyId, BranchId], references: [companyId, branchId], onDelete: Restrict, onUpdate: Cascade)
+  companyId  BigInt?
+  BranchId   Int?
+  createDate DateTime       @default(now())
+  updateDate DateTime       @updatedAt
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String
+  users User[]
+}
+
+model Contact {
+  id            Int            @id @default(autoincrement())
+  name          String
+  phone         String
+  email         String?
+  CompanyBranch CompanyBranch? @relation(fields: [companyId, BranchId], references: [companyId, branchId], onDelete: Restrict, onUpdate: Cascade)
+  companyId     BigInt?
+  BranchId      Int?
+  createDate    DateTime       @default(now())
+  updateDate    DateTime       @updatedAt
+}
+
+model CompanyBranch {
+  company        Company   @relation(fields: [companyId], references: [taxId], onDelete: Restrict, onUpdate: Cascade)
+  companyId      BigInt
+  branchId       Int       @default(00000)
+  name           String?
+  nameForeign    String?
+  address        String?
+  addressForeign String?
+  phone          String?
+  phone2         String?
+  fax            String?
+  email          String?
+  websites       String?
+  users          User[]
+  Contact        Contact[]
+  createDate     DateTime  @default(now())
+  updateDate     DateTime  @updatedAt
+
+  @@id([companyId, branchId])
+}
+
+model Company {
+  taxId         BigInt          @id
+  name          String
+  nameForeign   String?
+  tax           Boolean         @default(false)
+  companyType   CompanyType     @relation(fields: [companyTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  companyTypeId Int
+  branches      CompanyBranch[]
+  createDate    DateTime        @default(now())
+  updateDate    DateTime        @updatedAt
+}
+
+model CompanyType {
+  id      Int       @id @default(autoincrement())
+  name    String // Individual, Partnership, Corporation
+  company Company[]
+}
+
+model Product {
+  id             Int            @id @default(autoincrement())
+  name           String
+  nameForeign    String?
+  code           String?        @unique
+  description    String?
+  type           ProductType    @relation(fields: [TypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  unit           Unit           @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  barcode        String?
+  category       Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  sellingPrice   Decimal
+  sellingvat     VatType        @relation("Selling", fields: [sellingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  buyingPrice    Decimal
+  buyingvat      VatType        @relation("Buying", fields: [buyingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  inventoryTrack Boolean        @default(false)
+  TypeId         Int
+  unitId         Int
+  categoryId     Int
+  sellingvatId   Int
+  buyingvatId    Int
+  images         ProductImage[]
+  createDate     DateTime       @default(now())
+  updateDate     DateTime       @updatedAt
+}
+
+model ProductImage {
+  hash       String
+  productId  Int
+  Product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  data       Bytes
+  createDate DateTime @default(now())
+
+  @@id([hash, productId])
+}
+
+model VatType {
+  id      Int       @id @default(autoincrement())
+  name    String // Includeing VAT, Excluding VAT, Zero VAT, Non Vat
+  Selling Product[] @relation("Selling")
+  Buying  Product[] @relation("Buying")
+}
+
+model Unit {
+  id          Int       @id @default(autoincrement())
+  name        String // กก., กรัม, ตัว
+  nameForeign String // Kilogram, Gram, Unit
+  Product     Product[]
+}
+
+model ProductType {
+  id      Int       @id @default(autoincrement())
+  name    String // Product, Service
+  Product Product[]
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String // Food
+  Product Product[]
+}

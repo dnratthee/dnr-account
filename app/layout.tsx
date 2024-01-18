@@ -1,3 +1,37 @@
+import type { Metadata, Viewport } from "next";
+import Navbar from "~/components/Navbar";
+import "~/styles/globals.css";
+import "../node_modules/boxicons/css/boxicons.min.css";
+
+export const metadata: Metadata = {
+  title: "DNR Account",
+  description: "Invoicing and Accounting software",
+  generator: "Next.js",
+  manifest: "/manifest.webmanifest",
+  keywords: ["dnr", "dnratthee", "invoicing", "accounting"],
+  authors: [
+    { name: "Ratthee Jarathbenjawong" },
+    {
+      name: "Ratthee Jarathbenjawong",
+      url: "https://dnratthee.me/",
+    },
+  ],
+  icons: [
+    { rel: "apple-touch-icon", url: "icons/icon-192x192.png" },
+    { rel: "icon", url: "icons/icon-192x192.png" },
+  ],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "white" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -5,7 +39,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {/* <header>
+          <h1>DNR Account</h1>
+        </header> */}
+        <Navbar />
+        <div className="content">{children}</div>
+      </body>
     </html>
   );
 }

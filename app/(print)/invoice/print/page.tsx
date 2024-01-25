@@ -146,7 +146,7 @@ export default async function Page() {
             <div></div>
             <div className="nettotal">
               <div>({bahttext(sum + sumVat)})</div>
-              <div>ยอมรวมสุทธิ</div>
+              <div>ยอดรวมสุทธิ</div>
             </div>
             <div className="nettotal">{formatter.format(sum + sumVat)}</div>
           </div>

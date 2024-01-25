@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div>
+    <div className="page A4">
       <h1>Hello, Home Page !!!</h1>
       <Link href="/dashboard">Dashboard</Link>
     </div>

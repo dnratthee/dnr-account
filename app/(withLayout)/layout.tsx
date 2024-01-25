@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Navbar from "~/components/Navbar";
-import "~/styles/globals.css";
-import "../node_modules/boxicons/css/boxicons.min.css";
+import "~/styles/globals.scss";
+import "../../node_modules/boxicons/css/boxicons.min.css";
 
 export const metadata: Metadata = {
   title: "DNR Account",
@@ -26,10 +26,6 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "white" },
-  ],
 };
 
 export default function RootLayout({

@@ -1,0 +1,304 @@
+@import url("https://fonts.googleapis.com/css2?family=Sarabun:wght@200;300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  font-family: "sarabun";
+}
+
+@media print {
+  #header {
+    display: none;
+  }
+  #adwrapper {
+    display: none;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+    margin-top: -32px;
+    page: 1;
+  }
+  > * {
+    display: none;
+  }
+  .page {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: none;
+    background: initial;
+    page-break-after: always;
+  }
+}
+
+body {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.page.A4 {
+  size: A4;
+  width: 21cm;
+  min-height: 29.7cm;
+  padding: 0.5cm;
+  margin: 1cm auto;
+  background: white;
+}
+
+p {
+  white-space: pre-line;
+}
+
+.vat {
+  display: block !important;
+}
+
+.label,
+.left {
+  float: left;
+  top: 5px;
+  right: 10px;
+  padding: 0px;
+  margin-right: 5px;
+  background: #fff;
+}
+
+.brunch,
+.right {
+  float: right;
+  top: 5px;
+  right: 10px;
+  padding: 0px;
+  background: #fff;
+}
+
+.nettotal {
+  font-weight: bolder;
+  display: flex;
+  > * {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+  }
+  > :last-child {
+    display: flex;
+    flex: 0.3;
+    justify-content: end;
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  .header {
+    display: flex;
+    flex: 0 1;
+
+    .companySender {
+      display: flex;
+      flex: 0.6;
+
+      .logo {
+        display: flex;
+        align-items: center;
+        flex-grow: 0;
+        flex-shrink: 1;
+        padding: 0px;
+      }
+
+      .detail {
+        flex: 1;
+        padding: 6px;
+      }
+    }
+
+    .name {
+      display: flex;
+      flex: 0.4;
+      padding: 0px;
+      background-color: lightgray;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+    }
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    border: solid 1px #000;
+
+    > .header {
+      display: flex;
+      flex: 1;
+
+      .customer {
+        border-right: solid 1px #000;
+        display: block;
+        flex: 0.6;
+        > :not(:last-child) {
+          border-bottom: solid 1px #000;
+        }
+        > * {
+          padding: 8px;
+          min-height: 90px;
+          max-height: 90px;
+        }
+      }
+
+      .shippingDetail {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 0.4 0;
+        padding: 0px;
+        .row {
+          display: flex;
+          flex: 1;
+          flex-direction: row;
+          > * {
+            padding: 8px 14px;
+            flex: 1;
+          }
+          :not(:last-child) {
+            border-right: solid 1px #000;
+          }
+        }
+        .row:not(:last-child) {
+          border-bottom: solid 1px #000;
+        }
+      }
+    }
+
+    .detail {
+      display: column;
+      flex: 1;
+      flex-direction: row;
+
+      border-top: solid 1px #000;
+
+      > *:not(:last-child) {
+        border-bottom: solid 1px #000;
+      }
+
+      .total:has(*) {
+        border-bottom: solid 0px #000;
+      }
+      .total:not(:last-child) > *:not(:first-child) {
+        border-bottom: solid 1px #000;
+        justify-content: end;
+      }
+
+      > .header {
+        background-color: lightgray;
+        > *:not(:last-child) {
+          border-right: solid 1px #000;
+        }
+        > :first-child {
+          display: flex;
+          width: 35px;
+          justify-content: center;
+        }
+        > *:not(:first-child) {
+          display: flex;
+          flex: 0.8 0;
+          justify-content: center;
+        }
+        > *:nth-child(2) {
+          flex: 2 0;
+        }
+        > *:nth-child(3) {
+          flex: 0.6 0;
+        }
+        > *:nth-child(4) {
+          flex: 0.6 0;
+        }
+      }
+
+      > .total {
+      }
+
+      > * {
+        display: flex;
+        justify-content: space-between;
+        > *:not(:last-child) {
+          border-right: solid 1px #000;
+        }
+
+        > * {
+          padding: 8px 8px 4px 4px;
+        }
+
+        > :first-child {
+          display: flex;
+          width: 35px;
+          justify-content: end;
+        }
+        > *:nth-child(2) {
+          display: flex;
+          flex: 2 0;
+          padding-left: 8px;
+          justify-content: left;
+        }
+        > *:nth-child(4) {
+          display: flex;
+          flex: 0.6 0;
+          justify-content: center;
+        }
+        > *:nth-child(3) {
+          display: flex;
+          flex: 0.6 0;
+          justify-content: end;
+        }
+        *:nth-child(5),
+        *:nth-child(6) {
+          display: flex;
+          flex: 0.8 0;
+          justify-content: end;
+        }
+      }
+
+      > .row {
+        display: flex;
+      }
+    }
+  }
+
+  .remark > * {
+    margin: 16px 0px;
+  }
+
+  .footer {
+    display: flex;
+    flex: 1;
+    gap: 0px 60px;
+    align-items: end;
+    .box {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      padding: 8px;
+      > * {
+        justify-content: center;
+      }
+
+      // > *:not(:last-child) {
+      //   background-color: lightgray;
+      // }
+
+      // > *:first-child {
+      //   background-color: lightgray;
+      // }
+
+      > *:nth-child(2) {
+        min-height: 150px;
+      }
+      border: 1px solid #000;
+    }
+  }
+}

@@ -89,6 +89,31 @@ async function main() {
         data:
             { name: 'อาหารสด' },
     })
+    await prisma.product.create({
+        data:
+        {
+            name: 'อกเป็ดบาร์บารี่ 1 กก.',
+            nameForeign: 'Duck',
+            code: 'D0001',
+            description: 'อกเป็ด',
+            type: {
+
+            },
+            unit: {
+
+            },
+            category: {
+
+            },
+            sellingvat: {
+
+            },
+            buyingvat: {
+
+            },
+            sellingPrice: 700,
+        }
+    })
 
 
 }

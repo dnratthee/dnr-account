@@ -94,9 +94,9 @@ model Product {
   unit           Unit           @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   barcode        String?
   category       Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  sellingPrice   Decimal
+  sellingPrice   Decimal        @default(0)
   sellingvat     VatType        @relation("Selling", fields: [sellingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  buyingPrice    Decimal
+  buyingPrice    Decimal        @default(0)
   buyingvat      VatType        @relation("Buying", fields: [buyingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
   inventoryTrack Boolean        @default(false)
   TypeId         Int

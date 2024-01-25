@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 80",
+    "start": "next start",
     "lint": "next lint"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "repository": {
     "type": "git",
@@ -26,7 +29,8 @@
   },
   "homepage": "https://github.com/dnratthee/dnr-account#readme",
   "dependencies": {
-    "@prisma/client": "^5.8.0",
+    "@prisma/client": "^5.8.1",
+    "bahttext": "^2.3.0",
     "boxicons": "^2.1.4",
     "next": "^14.0.4",
     "next-auth": "^4.24.5",
@@ -38,7 +42,9 @@
   "devDependencies": {
     "@types/node": "20.11.0",
     "@types/react": "18.2.47",
-    "prisma": "^5.8.0",
+    "prisma": "^5.8.1",
+    "sass": "^1.70.0",
+    "ts-node": "^10.9.2",
     "typescript": "5.3.3"
   }
 }

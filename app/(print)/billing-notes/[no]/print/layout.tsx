@@ -1,5 +1,6 @@
 import type { Viewport } from "next";
 import "~/styles/print.scss";
+import "paper-css/paper.css";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -14,9 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <div className="print">{children}</div>
-      </body>
+      <body className="A4">{children}</body>
     </html>
   );
 }

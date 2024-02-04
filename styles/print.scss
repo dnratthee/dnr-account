@@ -5,48 +5,14 @@
   font-family: "sarabun";
 }
 
-@media print {
-  #header {
-    display: none;
-  }
-  #adwrapper {
-    display: none;
-  }
-  @page {
-    size: A4;
-    margin: 0;
-    margin-top: -32px;
-    page: 1;
-  }
-  > * {
-    display: none;
-  }
-  .page {
-    display: block;
-    margin: 0;
-    padding: 0;
-    border: initial;
-    border-radius: initial;
-    width: initial;
-    min-height: initial;
-    box-shadow: none;
-    background: initial;
-    page-break-after: always;
-  }
-}
-
 body {
-  -webkit-print-color-adjust: exact !important;
-  print-color-adjust: exact !important;
+  background-color: lightcyan;
 }
 
-.page.A4 {
-  size: A4;
-  width: 21cm;
-  min-height: 29.7cm;
-  padding: 0.5cm;
-  margin: 1cm auto;
-  background: white;
+.page {
+  font-size: 14px;
+  height: 100%;
+  width: 100%;
 }
 
 p {
@@ -65,6 +31,10 @@ p {
   padding: 0px;
   margin-right: 5px;
   background: #fff;
+}
+
+.itemName {
+  justify-content: space-between !important;
 }
 
 .brunch,
@@ -94,13 +64,15 @@ p {
 .page {
   display: flex;
   flex-direction: column;
-  .header {
+  > .header {
     display: flex;
     flex: 0 1;
+    height: 100px;
+    min-height: 100px;
 
     .companySender {
       display: flex;
-      flex: 0.6;
+      flex: 0.7;
 
       .logo {
         display: flex;
@@ -118,28 +90,35 @@ p {
 
     .name {
       display: flex;
-      flex: 0.4;
-      padding: 0px;
-      background-color: lightgray;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
+      flex-direction: column;
+      flex: 0.3;
+      align-items: end;
+      text-align: end;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      > * {
+        padding: 6px;
+      }
+      > *:first-child {
+        font-size: 20px;
+      }
     }
   }
 
   .body {
-    display: flex;
     flex-direction: column;
     border: solid 1px #000;
 
     > .header {
       display: flex;
       flex: 1;
+      height: 220px;
+      min-height: 220px;
 
       .customer {
         border-right: solid 1px #000;
         display: block;
-        flex: 0.6;
+        flex: 1 1;
         > :not(:last-child) {
           border-bottom: solid 1px #000;
         }
@@ -154,21 +133,23 @@ p {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        flex: 0.4 0;
+        flex: 0.646 0;
         padding: 0px;
-        .row {
+        .left {
+          font-size: 12px;
+          padding-right: 0px;
+        }
+        > * {
           display: flex;
-          flex: 1;
+          flex: 1 1 0px;
+          height: 0;
           flex-direction: row;
           > * {
-            padding: 8px 14px;
+            padding: 8px 8px;
             flex: 1;
           }
-          :not(:last-child) {
-            border-right: solid 1px #000;
-          }
         }
-        .row:not(:last-child) {
+        > *:not(:last-child) {
           border-bottom: solid 1px #000;
         }
       }
@@ -193,72 +174,147 @@ p {
         justify-content: end;
       }
 
-      > .header {
-        background-color: lightgray;
-        > *:not(:last-child) {
-          border-right: solid 1px #000;
+      &.bill {
+        > .header {
+          background-color: lightgray;
         }
-        > :first-child {
-          display: flex;
-          width: 35px;
-          justify-content: center;
-        }
-        > *:not(:first-child) {
-          display: flex;
-          flex: 0.8 0;
-          justify-content: center;
-        }
-        > *:nth-child(2) {
-          flex: 2 0;
-        }
-        > *:nth-child(3) {
-          flex: 0.6 0;
-        }
-        > *:nth-child(4) {
-          flex: 0.6 0;
-        }
-      }
+        > * {
+          font-size: 12px;
+          > *:not(:last-child) {
+            border-right: solid 1px #000;
+          }
+          > :first-child {
+            display: flex;
+            width: 35px;
+            justify-content: center;
+          }
+          > *:not(:first-child) {
+            display: flex;
+            flex: 0.7 0;
+            justify-content: center;
+          }
+          > *:nth-child(2) {
+            flex: 1 0;
+          }
 
-      > .total {
-      }
-
-      > * {
-        display: flex;
-        justify-content: space-between;
-        > *:not(:last-child) {
-          border-right: solid 1px #000;
+          > *:nth-child(3),
+          *:nth-child(4),
+          *:nth-child(5),
+          *:nth-child(6) {
+            flex: 0.66 0;
+          }
         }
 
         > * {
-          padding: 8px 8px 4px 4px;
+          display: flex;
+          justify-content: space-between;
+          > *:not(:last-child) {
+            border-right: solid 1px #000;
+          }
+
+          > * {
+            padding: 8px 8px 4px 4px;
+          }
+
+          > :first-child {
+            display: flex;
+            width: 35px;
+            justify-content: end;
+          }
+          > *:nth-child(2) {
+            display: flex;
+            flex: 2 0;
+            padding-left: 8px;
+            justify-content: left;
+          }
+          > *:nth-child(3),
+          *:nth-child(4) {
+            display: flex;
+            flex: 0.5 0;
+            justify-content: center;
+          }
+          > *:nth-child(5),
+          *:nth-child(6) {
+            display: flex;
+            flex: 0.6 0;
+            justify-content: end;
+          }
+          *:nth-child(7) {
+            display: flex;
+            flex: 0.7 0;
+            justify-content: end;
+          }
+        }
+      }
+
+      &.invoice {
+        > .header {
+          background-color: lightgray;
+          font-size: 12px;
+          > *:not(:last-child) {
+            border-right: solid 1px #000;
+          }
+          > :first-child {
+            display: flex;
+            width: 35px;
+            justify-content: center;
+          }
+          > *:not(:first-child) {
+            display: flex;
+            flex: 0.7 0;
+            justify-content: center;
+          }
+          > *:nth-child(2) {
+            flex: 2 0;
+          }
+          > *:nth-child(3) {
+            flex: 0.6 0;
+          }
+          > *:nth-child(4),
+          *:nth-child(6) {
+            flex: 0.4 0;
+          }
         }
 
-        > :first-child {
+        > * {
           display: flex;
-          width: 35px;
-          justify-content: end;
-        }
-        > *:nth-child(2) {
-          display: flex;
-          flex: 2 0;
-          padding-left: 8px;
-          justify-content: left;
-        }
-        > *:nth-child(4) {
-          display: flex;
-          flex: 0.6 0;
-          justify-content: center;
-        }
-        > *:nth-child(3) {
-          display: flex;
-          flex: 0.6 0;
-          justify-content: end;
-        }
-        *:nth-child(5),
-        *:nth-child(6) {
-          display: flex;
-          flex: 0.8 0;
-          justify-content: end;
+          justify-content: space-between;
+          > *:not(:last-child) {
+            border-right: solid 1px #000;
+          }
+
+          > * {
+            padding: 8px 8px 4px 4px;
+          }
+
+          > :first-child {
+            display: flex;
+            width: 35px;
+            justify-content: end;
+          }
+          > *:nth-child(2) {
+            display: flex;
+            flex: 2 0;
+            padding-left: 8px;
+            justify-content: left;
+          }
+          > *:nth-child(4),
+          *:nth-child(6) {
+            display: flex;
+            flex: 0.4 0;
+            justify-content: center;
+          }
+          > *:nth-child(3) {
+            display: flex;
+            flex: 0.6 0;
+            justify-content: end;
+          }
+          *:nth-child(5),
+          *:nth-child(7) {
+            display: flex;
+            flex: 0.7 0;
+            justify-content: end;
+          }
         }
       }
 
@@ -268,14 +324,35 @@ p {
     }
   }
 
-  .remark > * {
-    margin: 16px 0px;
+  .remark {
+    flex: 1;
+    > * {
+      margin: 16px 0px;
+    }
+  }
+
+  .payment {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: end;
+    > * {
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    *:nth-child(2) {
+      > *:nth-child(2n) {
+        border-bottom: #000 1px solid;
+        flex: 1;
+        margin: 0px 8px;
+      }
+    }
   }
 
   .footer {
     display: flex;
-    flex: 1;
-    gap: 0px 60px;
+    gap: 0px 40px;
     align-items: end;
     .box {
       display: flex;
@@ -296,9 +373,18 @@ p {
       // }
 
       > *:nth-child(2) {
-        min-height: 150px;
+        min-height: 120px;
       }
       border: 1px solid #000;
     }
   }
+}
+
+.sign {
+  display: flex;
+  align-items: center;
+}
+
+.end {
+  justify-content: end !important;
 }

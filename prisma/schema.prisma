@@ -21,8 +21,8 @@ model User {
   roleId     Int
   sign       Bytes?
   company    CompanyBranch? @relation(fields: [companyId, BranchId], references: [companyId, branchId], onDelete: Restrict, onUpdate: Cascade)
-  companyId  BigInt?
-  BranchId   Int?
+  companyId  String?
+  BranchId   String?
   createDate DateTime       @default(now())
   updateDate DateTime       @updatedAt
 }
@@ -36,19 +36,21 @@ model Role {
 model Contact {
   id            Int            @id @default(autoincrement())
   name          String
-  phone         String
+  phone         String?
   email         String?
+  address       String?
   CompanyBranch CompanyBranch? @relation(fields: [companyId, BranchId], references: [companyId, branchId], onDelete: Restrict, onUpdate: Cascade)
-  companyId     BigInt?
-  BranchId      Int?
+  companyId     String?
+  BranchId      String?
   createDate    DateTime       @default(now())
   updateDate    DateTime       @updatedAt
+  Invoice       Invoice[]
 }
 
 model CompanyBranch {
   company        Company   @relation(fields: [companyId], references: [taxId], onDelete: Restrict, onUpdate: Cascade)
-  companyId      BigInt
-  branchId       Int       @default(00000)
+  companyId      String
+  branchId       String    @default("00000")
   name           String?
   nameForeign    String?
   address        String?
@@ -62,18 +64,22 @@ model CompanyBranch {
   Contact        Contact[]
   createDate     DateTime  @default(now())
   updateDate     DateTime  @updatedAt
+  Invoice        Invoice[]
+  Project        Project[]
 
   @@id([companyId, branchId])
+  @@unique([companyId, branchId])
 }
 
 model Company {
-  taxId         BigInt          @id
+  taxId         String          @id
   name          String
   nameForeign   String?
   tax           Boolean         @default(false)
   companyType   CompanyType     @relation(fields: [companyTypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   companyTypeId Int
   branches      CompanyBranch[]
+  remark        String?
   createDate    DateTime        @default(now())
   updateDate    DateTime        @updatedAt
 }
@@ -84,29 +90,202 @@ model CompanyType {
   company Company[]
 }
 
+model Invoice {
+  id              Int            @id @default(autoincrement())
+  no              String         @unique @default("INVYYYYMM-CCCC")
+  po              String?
+  nonVatTotal     Decimal        @default(0.00)
+  netTotal        Decimal        @default(0.00)
+  date            DateTime       @default(now())
+  credit          Int            @default(0)
+  shipping        Contact        @relation(fields: [contactId], references: [id])
+  customer        CompanyBranch? @relation(fields: [CompanyId, BranchId], references: [companyId, branchId])
+  project         Project?       @relation(fields: [projectId], references: [id])
+  address         String?
+  shippingAddress String?
+  remark          String?
+  internalRemark  String?
+  created         Boolean        @default(false)
+
+  contactId     Int             @default(0)
+  CompanyId     String?
+  BranchId      String?
+  scanDoc       DocImage[]
+  InvoiceDetail InvoiceDetail[]
+  createDate    DateTime        @default(now())
+  updateDate    DateTime        @updatedAt
+  InvoiceStatus InvoiceStatus[]
+
+  BillingNote   BillingNote? @relation(fields: [billingNoteId], references: [id])
+  Receipt       Receipt?     @relation(fields: [receiptId], references: [id])
+  CashInvoice   CashInvoice? @relation(fields: [cashInvoiceId], references: [id])
+  billingNoteId Int?
+  receiptId     Int?
+  cashInvoiceId Int?
+  projectId     Int?
+}
+
+model Project {
+  id                     Int           @id @default(autoincrement())
+  name                   String
+  company                CompanyBranch @relation(fields: [companyBranchCompanyId, companyBranchBranchId], references: [companyId, branchId])
+  createDate             DateTime      @default(now())
+  updateDate             DateTime      @updatedAt
+  companyBranchCompanyId String
+  companyBranchBranchId  String
+  Invoice                Invoice[]
+}
+
+model InvoiceStatus {
+  id                  Int               @id @default(autoincrement())
+  invoice             Invoice           @relation(fields: [invoiceId], references: [id])
+  status              InvoiceStatusType @relation(fields: [invoiceStatusTypeId], references: [id])
+  createDate          DateTime          @default(now())
+  invoiceStatusTypeId Int               @default(1)
+  invoiceId           Int
+}
+
+model InvoiceStatusType {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @default("Awaiting")
+  InvoiceStatus InvoiceStatus[]
+  // Invoice
+  // Awaiting, Payment Due, Receipt created, Void
+}
+
+model InvoiceDetail {
+  id        Int     @id @default(autoincrement())
+  invoice   Invoice @relation(fields: [invoiceId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  name      String  @default("")
+  price     Decimal @default(1)
+  amount    Decimal @default(1)
+  vat       Boolean @default(false)
+  discount  Int     @default(0)
+  invoiceId Int
+  productId Int
+}
+
+model BillingNote {
+  id                Int                 @id @default(autoincrement())
+  no                String              @unique @default("BLYYYYMM-CCCC")
+  createDate        DateTime            @default(now())
+  credit            Int                 @default(0)
+  showCredit        Boolean             @default(true)
+  remark            String?
+  internalRemark    String?
+  BillingNoteStatus BillingNoteStatus[]
+  invoices          Invoice[]
+
+  scanDoc DocImage[]
+}
+
+model BillingNoteStatus {
+  id                      Int                   @id @default(autoincrement())
+  bill                    BillingNote           @relation(fields: [billingNoteId], references: [id])
+  status                  BillingNoteStatusType @relation(fields: [billingNoteStatusTypeId], references: [id])
+  createDate              DateTime              @default(now())
+  billingNoteId           Int
+  billingNoteStatusTypeId Int                   @default(1)
+}
+
+model BillingNoteStatusType {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique @default("Awaiting")
+  // Billing Note
+  // Awaiting, Approved, Receipt created, Void
+  BillingNoteStatus BillingNoteStatus[]
+}
+
+model Receipt {
+  id            Int             @id @default(autoincrement())
+  no            String          @unique @default("REYYYYMM-CCCC")
+  hasInvoice    Boolean         @default(false)
+  createDate    DateTime        @default(now())
+  ReceiptStatus ReceiptStatus[]
+  invoices      Invoice[]
+  invoiceId     Int             @unique
+
+  scanDoc DocImage[]
+}
+
+model ReceiptStatus {
+  id                  Int               @id @default(autoincrement())
+  receipt             Receipt           @relation(fields: [receiptId], references: [id])
+  status              ReceiptStatusType @relation(fields: [receiptStatusTypeId], references: [id])
+  createDate          DateTime          @default(now())
+  receiptId           Int
+  receiptStatusTypeId Int               @default(1)
+}
+
+model ReceiptStatusType {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @default("Awaiting")
+  // Receipt
+  // Awaiting, Paid, Void
+  ReceiptStatus ReceiptStatus[]
+}
+
+model CashInvoice {
+  id                Int                 @id @default(autoincrement())
+  no                String              @unique @default("CAYYYMM-CCCC")
+  CashInvoiceStatus CashInvoiceStatus[]
+  Invoice           Invoice[]
+  invoiceId         Int                 @unique
+}
+
+model CashInvoiceStatus {
+  id                      Int                   @id @default(autoincrement())
+  invoice                 CashInvoice           @relation(fields: [cashInvoiceId], references: [id])
+  status                  CashInvoiceStatusType @relation(fields: [cashInvoiceStatusTypeId], references: [id])
+  createDate              DateTime              @default(now())
+  cashInvoiceId           Int
+  cashInvoiceStatusTypeId Int                   @default(1)
+}
+
+model CashInvoiceStatusType {
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique @default("Awaiting")
+  // Cash Invoice
+  // Awaiting, Paid, Void
+  CashInvoiceStatus CashInvoiceStatus[]
+}
+
 model Product {
-  id             Int            @id @default(autoincrement())
+  id             Int             @id @default(autoincrement())
   name           String
   nameForeign    String?
-  code           String?        @unique
+  code           String?         @unique
   description    String?
-  type           ProductType    @relation(fields: [TypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  unit           Unit           @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  type           ProductType     @relation(fields: [TypeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  unit           Unit            @relation(fields: [unitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   barcode        String?
-  category       Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  sellingPrice   Decimal        @default(0)
-  sellingvat     VatType        @relation("Selling", fields: [sellingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  buyingPrice    Decimal        @default(0)
-  buyingvat      VatType        @relation("Buying", fields: [buyingvatId], references: [id], onDelete: Restrict, onUpdate: Restrict)
-  inventoryTrack Boolean        @default(false)
+  category       Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  sellingPrice   Decimal         @default(0)
+  sellingvat     Boolean         @default(false)
+  inventoryTrack Boolean         @default(false)
   TypeId         Int
   unitId         Int
   categoryId     Int
-  sellingvatId   Int
-  buyingvatId    Int
   images         ProductImage[]
-  createDate     DateTime       @default(now())
-  updateDate     DateTime       @updatedAt
+  createDate     DateTime        @default(now())
+  updateDate     DateTime        @updatedAt
+  InvoiceDetail  InvoiceDetail[]
+}
+
+model DocImage {
+  hash          String
+  ref           String
+  data          Bytes
+  createDate    DateTime     @default(now())
+  Invoice       Invoice?     @relation(fields: [invoiceId], references: [id])
+  invoiceId     Int?
+  BillingNote   BillingNote? @relation(fields: [billingNoteId], references: [id])
+  billingNoteId Int?
+  Receipt       Receipt?     @relation(fields: [receiptId], references: [id])
+  receiptId     Int?
+
+  @@id([hash, ref])
 }
 
 model ProductImage {
@@ -117,13 +296,6 @@ model ProductImage {
   createDate DateTime @default(now())
 
   @@id([hash, productId])
-}
-
-model VatType {
-  id      Int       @id @default(autoincrement())
-  name    String // Includeing VAT, Excluding VAT, Zero VAT, Non Vat
-  Selling Product[] @relation("Selling")
-  Buying  Product[] @relation("Buying")
 }
 
 model Unit {

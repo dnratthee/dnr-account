@@ -144,3 +144,8 @@ public/fallback-*.js
 # Dev DB Prisma
 dev.db*
 prisma/migrations
+
+# DNR
+*.ts.bak
+sign.jpg
+.vscode

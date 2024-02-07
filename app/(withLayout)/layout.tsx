@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "DNR Account",
   description: "Invoicing and Accounting software",
   generator: "Next.js",
-  // manifest: "/manifest.webmanifest",
+  manifest: "/manifest.webmanifest",
   keywords: ["dnr", "dnratthee", "invoicing", "accounting"],
   authors: [
     { name: "Ratthee Jarathbenjawong" },
@@ -16,10 +16,10 @@ export const metadata: Metadata = {
       url: "https://dnratthee.me/",
     },
   ],
-  // icons: [
-  //   { rel: "apple-touch-icon", url: "icons/icon-192x192.png" },
-  //   { rel: "icon", url: "icons/icon-192x192.png" },
-  // ],
+  icons: [
+    { rel: "apple-touch-icon", url: "icons/icon-192x192.png" },
+    { rel: "icon", url: "icons/icon-192x192.png" },
+  ],
 };
 
 export async function generateStaticParams() {

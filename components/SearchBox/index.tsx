@@ -1,11 +1,12 @@
 "use client";
+import React, { KeyboardEvent } from "react";
 import { useState } from "react";
 
 export default ({ searchParams }) => {
   const [no, setNo] = useState(searchParams.no || "");
   const [name, setName] = useState(searchParams.name || "");
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       e.currentTarget.form?.requestSubmit();

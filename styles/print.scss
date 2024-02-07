@@ -62,7 +62,7 @@ p {
   > :last-child {
     display: flex;
     flex: 0.3;
-    justify-content: end;
+    justify-content: flex-end;
   }
 }
 
@@ -97,8 +97,8 @@ p {
       display: flex;
       flex-direction: column;
       flex: 0.3;
-      align-items: end;
-      text-align: end;
+      align-items: flex-end;
+      text-align: flex-end;
       justify-content: space-between;
       padding-bottom: 10px;
       > * {
@@ -176,7 +176,7 @@ p {
       }
       .total:not(:last-child) > *:not(:first-child) {
         border-bottom: solid 1px #000;
-        justify-content: end;
+        justify-content: flex-end;
       }
 
       &.bill {

@@ -1,8 +1,4 @@
-export const dynamic = "force-dynamic";
-
 import { Metadata } from "next";
-import Link from "next/link";
-
 import prisma from "~/lib/prisma";
 import { BillingNoteList } from "~/components/ItemList";
 import Pagination from "~/components/Pagination";

@@ -1,6 +1,3 @@
-import Link from "next/link";
-import Image from "next/image";
-
 import ProductList from "./ProductList";
 import InvoiceList from "./InvoiceList";
 import BillingNoteList from "./BillingNoteList";

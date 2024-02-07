@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { number, plusDate } from "~/lib/utils/formatter";
+import { number } from "~/lib/utils/formatter";
 
 import dynamic from "next/dynamic";
 const SearchBox = dynamic(() => import("~/components/SearchBox"), {

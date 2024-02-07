@@ -1,4 +1,3 @@
-// `app/dashboard/page.tsx` is the UI for the `/dashboard` URL
 import { Metadata } from "next";
 import Link from "next/link";
 

@@ -1,11 +1,4 @@
-// export const dynamic = "force-dynamic";
-// import dynamic from "next/dynamic";
-// const InvoiceList = dynamic(() => import("~/components/ItemList/InvoiceList"), {
-//   ssr: false,
-// });
-import { Suspense } from "react";
 import { Metadata } from "next";
-
 import prisma from "~/lib/prisma";
 import { InvoiceList } from "~/components/ItemList";
 import Pagination from "~/components/Pagination";
@@ -81,9 +74,7 @@ export default async function Page({
     <>
       <div className="title">ใบส่งสินค้า/ใบแจ้งหนี้/ใบกำกับภาษี</div>
       <div className="table">
-        <Suspense fallback={<p>Loading data...</p>}>
-          <InvoiceList list={invoice} searchParams={searchParams} />
-        </Suspense>
+        <InvoiceList list={invoice} searchParams={searchParams} />
       </div>
       <Pagination
         currentPage={currentPage}

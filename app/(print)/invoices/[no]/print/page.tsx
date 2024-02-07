@@ -5,7 +5,7 @@ import Image from "next/image";
 import { bahttext } from "bahttext";
 import prisma from "~/lib/prisma";
 
-import { number, plusDate } from "~/utils/formater";
+import { number, plusDate } from "~/lib/utils/formatter";
 
 export async function generateMetadata({ params }) {
   return {
@@ -60,11 +60,10 @@ async function Paper({ no = "", c = false }) {
             <div className="logo">
               <Image
                 src="/static/images/logo.png"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div className="detail">
@@ -197,7 +196,7 @@ async function Paper({ no = "", c = false }) {
             <div className="total row">
               <div></div>
               <div>ราคาสินค้าไม่รวมภาษี</div>
-              <div>{number.format(sum)}</div>
+              <div>{number.format(sum - sumVat)}</div>
             </div>
             <div className="total row">
               <div></div>
@@ -207,7 +206,7 @@ async function Paper({ no = "", c = false }) {
             <div className="total row">
               <div></div>
               <div>ราคาสินค้าหลังหักส่วนลด</div>
-              <div>{number.format(sum - sumDis)}</div>
+              <div>{number.format(sum - sumVat - sumDis)}</div>
             </div>
             <div className="total row">
               <div></div>
@@ -229,7 +228,7 @@ async function Paper({ no = "", c = false }) {
         </div>
 
         <div className="remark">
-          {/* <p>หมายเหตุ : {invoice.remark}</p> */}
+          <p>{invoice.remark ? "หมายเหตุ : " + invoice.remark : ""}</p>
           <p>วิธีการชำระเงิน : {process.env.NEXT_PUBLIC_company_payment} </p>
         </div>
 
@@ -251,11 +250,10 @@ async function Paper({ no = "", c = false }) {
             <div className="sign">
               <Image
                 src="/static/images/sign.jpg"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div>วันที่ : {new Date(Date.now()).toLocaleDateString("th")}</div>
@@ -269,7 +267,7 @@ async function Paper({ no = "", c = false }) {
   );
 }
 
-export default function Page({ params }: { params: { no: string } }) {
+export default function Page({ params }) {
   return (
     <div>
       <Paper no={params.no} c />

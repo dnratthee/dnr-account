@@ -4,6 +4,7 @@ import Image from "next/image";
 import ProductList from "./ProductList";
 import InvoiceList from "./InvoiceList";
 import BillingNoteList from "./BillingNoteList";
+import ReceiptList from "./ReceiptList";
 
 export default ({ list }) => (
   <ul>
@@ -13,4 +14,4 @@ export default ({ list }) => (
   </ul>
 );
 
-export { ProductList, InvoiceList, BillingNoteList };
+export { ProductList, InvoiceList, BillingNoteList, ReceiptList };

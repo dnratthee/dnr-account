@@ -204,7 +204,6 @@ model Receipt {
   createDate    DateTime        @default(now())
   ReceiptStatus ReceiptStatus[]
   invoices      Invoice[]
-  invoiceId     Int             @unique
 
   scanDoc DocImage[]
 }

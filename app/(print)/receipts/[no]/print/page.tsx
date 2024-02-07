@@ -1,8 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import prisma from "~/lib/prisma";
 import { bahttext } from "bahttext";
-import { number, plusDate, phone } from "~/utils/formater";
+import { number, plusDate, phone } from "~/lib/utils/formatter";
 
 export async function generateMetadata({ params }) {
   return {
@@ -30,11 +31,10 @@ async function Paper({ no = "", c = false }) {
             <div className="logo">
               <Image
                 src="/static/images/logo.png"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div className="detail"></div>
@@ -108,7 +108,19 @@ async function Paper({ no = "", c = false }) {
                   <p>อ้างอิง :</p>
                   <p>Refer</p>
                 </div>
-                <p>{receipt.invoices[0].BillingNote.no}</p>
+                <p>
+                  {receipt.invoices[0].BillingNote ? (
+                    <Link
+                      href={`/billing-notes/${receipt.invoices[0].BillingNote.no}/print`}
+                    >
+                      {receipt.invoices[0].BillingNote.no}
+                    </Link>
+                  ) : (
+                    <Link href={`/invoices/${receipt.invoices[0].no}/print`}>
+                      {receipt.invoices[0].no}
+                    </Link>
+                  )}
+                </p>
               </div>
               <div>
                 <div className="left">
@@ -139,7 +151,9 @@ async function Paper({ no = "", c = false }) {
                 <div className="row" key={index}>
                   <div>{index + 1}</div>
                   <div>
-                    {item.no} {item.po ? "( P/O : " + item.po + " )" : ""}
+                    <Link href={`/invoices/${item.no}/print`}>
+                      {item.no} {item.po ? "( P/O : " + item.po + " )" : ""}
+                    </Link>
                   </div>
                   <div>{item.date.toLocaleDateString("th")}</div>
                   <div>
@@ -188,9 +202,15 @@ async function Paper({ no = "", c = false }) {
         <div className="payment">
           <div>
             <div>การชำระเงินจะสมบูรณ์ เมื่อบริษัทได้รับเงินเรียบร้อยแล้ว</div>
-            <div>เงินสด</div>
-            <div>เช็ค</div>
-            <div>โอนเงิน</div>
+            <div>
+              <input type="checkbox"></input> เงินสด
+            </div>
+            <div>
+              <input type="checkbox"></input> เช็ค
+            </div>
+            <div>
+              <input type="checkbox"></input> โอนเงิน
+            </div>
           </div>
           <div>
             <div>ธนาคาร</div>
@@ -216,11 +236,10 @@ async function Paper({ no = "", c = false }) {
             <div className="sign">
               <Image
                 src="/static/images/sign.jpg"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div>วันที่ : {new Date(Date.now()).toLocaleDateString("th")}</div>

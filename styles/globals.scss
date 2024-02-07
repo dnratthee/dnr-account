@@ -36,6 +36,15 @@ $color-b: #f3f3f3;
   }
 }
 
+.title {
+  font-size: x-large;
+  margin-bottom: 16px;
+}
+
+.tr.data .td {
+  overflow: hidden;
+}
+
 .sidebar {
   * {
     margin: 0;
@@ -209,9 +218,59 @@ $color-b: #f3f3f3;
   display: flex;
   flex-direction: column;
   border: 1px solid black;
+  max-width: 1200px;
+
+  > .data a {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    flex: 1 1 40px;
+
+    &:nth-child(2n) .tr.data .td {
+      background-color: aliceblue;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: #666;
+  }
+
+  .void a .td {
+    color: tomato !important;
+  }
 
   .tr {
     display: flex;
+    overflow: hidden;
+    position: relative;
+    flex: 1 1 40px;
+
+    color: #666;
+
+    &:hover .td {
+      background-color: lightcyan;
+      color: #000;
+    }
+
+    &.void .td,
+    .td.void {
+      color: tomato !important;
+      text-shadow: 1px 1px 4px white;
+    }
+
+    a.success,
+    .td.success {
+      color: limegreen !important;
+      text-shadow: 1px 1px 4px white;
+    }
+
+    a.wait,
+    .td.wait {
+      color: yellow !important;
+      text-shadow: 1px 1px 4px black;
+    }
+
     &.header {
       background-color: $color-p;
       color: #fff;
@@ -220,8 +279,32 @@ $color-b: #f3f3f3;
     .th,
     .td {
       vertical-align: middle;
-      padding: 10px;
-      flex: 1;
+      padding: 6px 6px 6px 6px;
+      flex: 1 1;
+      display: flex;
+      align-items: flex-start;
+      &:first-child {
+        justify-content: flex-end;
+        max-width: 120px;
+        width: 120px;
+      }
+      &:nth-child(2) {
+        width: 200px;
+        max-width: 200px;
+      }
+      &:nth-child(3) {
+        flex: 2;
+      }
+      &:nth-child(4) {
+        justify-content: flex-end;
+        width: 120px;
+        max-width: 120px;
+      }
+      &:nth-child(5) {
+        justify-content: flex-end;
+        width: 200px;
+        max-width: 200px;
+      }
     }
 
     .box {
@@ -238,4 +321,11 @@ $color-b: #f3f3f3;
 .sign {
   display: flex;
   align-items: center;
+}
+
+.pagination {
+  margin-top: 16px;
+  > * {
+    padding: 6px;
+  }
 }

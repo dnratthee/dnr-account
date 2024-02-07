@@ -14,8 +14,8 @@ export default ({ list, searchParams }) => {
         <div className="th">วันที่</div>
         <div className="th">เลขที่เอกสาร</div>
         <div className="th">ชื่อลูกค้า</div>
-        <div className="th">วันครบกำหนด</div>
         <div className="th">ยอดรวม</div>
+        <div></div>
         <div className="th">สถานะ</div>
         {/* <div className="th box"></div> */}
       </div>
@@ -26,12 +26,11 @@ export default ({ list, searchParams }) => {
         let sum = 0;
         if (data.invoices[0])
           return (
-            <Link key={data.no} href={`/billing-notes/${data.no}/print`}>
+            <Link key={data.no} href={`/receipts/${data.no}/print`}>
               {/* href={`/billing-notes/${data.no}` */}
               <div
                 className={`tr data ${
-                  data.BillingNoteStatus[0] &&
-                  data.BillingNoteStatus[0].status.id == 4
+                  data.ReceiptStatus[0] && data.ReceiptStatus[0].status.id == 4
                     ? "void"
                     : ""
                 }`}
@@ -45,20 +44,26 @@ export default ({ list, searchParams }) => {
                   {data.invoices[0] ? data.invoices[0].shipping.name : ""}
                 </div>
                 <div className="td">
-                  {plusDate(data.createDate, data.credit).toLocaleDateString(
-                    "th"
-                  )}
-                </div>
-                <div className="td">
                   {number.format(
                     data.invoices
                       .map((x) => x.netTotal)
                       .reduce((x, y) => Number(x) + Number(y))
                   )}
                 </div>
-                <div className="td">
-                  {data.BillingNoteStatus[0]
-                    ? data.BillingNoteStatus[0].status.name
+                <div></div>
+                <div
+                  className={
+                    data.ReceiptStatus[0] &&
+                    data.ReceiptStatus[0].status.id == 2
+                      ? "td success"
+                      : data.ReceiptStatus[0] &&
+                        data.ReceiptStatus[0].status.id == 3
+                      ? "td void"
+                      : "td"
+                  }
+                >
+                  {data.ReceiptStatus[0]
+                    ? data.ReceiptStatus[0].status.name
                     : "Awaiting"}
                 </div>
                 {/* <div className="td box">...</div> */}

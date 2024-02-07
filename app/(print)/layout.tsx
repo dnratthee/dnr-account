@@ -8,13 +8,19 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+export async function generateStaticParams() {
+  return [{ lang: "th" }, { lang: "en-US" }];
+}
+
 export default function RootLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params;
 }) {
   return (
-    <html lang="en">
+    <html lang={params.lang}>
       <body className="A4">{children}</body>
     </html>
   );

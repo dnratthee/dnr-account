@@ -1,0 +1,46 @@
+{
+  "billing-notes" : "billing-notes",
+  "invoices" : "invoices",
+  "receipts" : "receipts",
+  "bill" : {
+    "manuscript" : "manuscript",
+    "copy" : "copy",
+    "taxID" : "taxID",
+    "brunch" : "brunch",
+    "customer" : "customer",
+    "phone" : "phone",
+    "no" : "no",
+    "date" : "date",
+    "credit" : "credit",
+    "dueDate" : "dueDate",
+    "#" : "#",
+    "billNo" : "billNo",
+    "billDate" : "billDate",
+    "beforeTAX" : "beforeTAX",
+    "paid" : "paid",
+    "total" : "total",
+    "list" : "list",
+    "notIncludeTAX" : "notIncludeTAX",
+    "tax" : "tax",
+    "netTotal" : "netTotal",
+    "remark" : "remark",
+    "payment" : "payment",
+    "recipient" : "recipient",
+    "biller" : "biller",
+
+    "status" : {
+      "invoice": {
+        "Awaiting" : "Awaiting"
+      },
+      "billing" : {
+        "Awaiting" : "Awaiting"
+      },
+      "Awaiting" : "Awaiting",
+      "Approved" : "Approved",
+      "Payment Due" : "Payment Due",
+      "Receipt created" : "Receipt created",
+      "Paid" : "Paid",
+      "Void" : "Void"
+    }
+  }
+}

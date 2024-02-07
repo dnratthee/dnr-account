@@ -4,11 +4,11 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 import prisma from "~/lib/prisma";
-import { BillingNoteList } from "~/components/ItemList";
+import { ReceiptList } from "~/components/ItemList";
 import Pagination from "~/components/Pagination";
 
 export const metadata: Metadata = {
-  title: "DNR Account :: Billing Note",
+  title: "DNR Account :: Receipts",
 };
 
 export default async function Page({
@@ -29,7 +29,7 @@ export default async function Page({
   const limit = Number(searchParams?.limit) || 20;
 
   const count = (
-    await prisma.billingNote.findMany({
+    await prisma.receipt.findMany({
       where: {
         no: { contains: no },
         invoices: {
@@ -45,7 +45,7 @@ export default async function Page({
     })
   ).length;
 
-  const bill = await prisma.billingNote.findMany({
+  const bill = await prisma.receipt.findMany({
     where: {
       no: { contains: no },
       invoices: {
@@ -60,7 +60,7 @@ export default async function Page({
     },
     include: {
       invoices: { include: { shipping: true } },
-      BillingNoteStatus: { include: { status: true } },
+      ReceiptStatus: { include: { status: true } },
     },
     orderBy: {
       createDate: "desc",
@@ -69,9 +69,9 @@ export default async function Page({
 
   return (
     <>
-      <div className="title">ใบวางบิล</div>
+      <div className="title">ใบเสร็จรับเงิน</div>
       <div className="table">
-        <BillingNoteList list={bill} searchParams={searchParams} />
+        <ReceiptList list={bill} searchParams={searchParams} />
       </div>
       <Pagination
         currentPage={currentPage}

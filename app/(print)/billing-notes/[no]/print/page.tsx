@@ -1,8 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import prisma from "~/lib/prisma";
 import { bahttext } from "bahttext";
-import { number, plusDate, phone } from "~/utils/formater";
+import { number, plusDate, phone } from "~/lib/utils/formatter";
 
 export async function generateMetadata({ params }) {
   return {
@@ -18,7 +19,10 @@ async function Paper({ no = "", c = false }) {
   const bill = await prisma.billingNote.findUnique({
     where: { no: no },
     include: {
-      invoices: { include: { shipping: true } },
+      invoices: {
+        include: { shipping: true, customer: true },
+        orderBy: { date: "asc" },
+      },
     },
   });
 
@@ -30,11 +34,10 @@ async function Paper({ no = "", c = false }) {
             <div className="logo">
               <Image
                 src="/static/images/logo.png"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div className="detail"></div>
@@ -68,9 +71,9 @@ async function Paper({ no = "", c = false }) {
                 <p>
                   {bill.invoices[0].address !== null
                     ? bill.invoices[0].address
-                    : bill.invoices[0].shipping.name +
+                    : bill.invoices[0].customer.name +
                       "\n" +
-                      bill.invoices[0].shipping.address}
+                      bill.invoices[0].customer.address}
                 </p>
                 <p>
                   {bill.invoices[0].CompanyId.length >= 10
@@ -139,7 +142,9 @@ async function Paper({ no = "", c = false }) {
                 <div className="row" key={index}>
                   <div>{index + 1}</div>
                   <div>
-                    {item.no} {item.po ? "( P/O : " + item.po + " )" : ""}
+                    <Link href={`/invoices/${item.no}/print`}>
+                      {item.no} {item.po ? "( P/O : " + item.po + " )" : ""}
+                    </Link>
                   </div>
                   <div>{item.date.toLocaleDateString("th")}</div>
                   <div>
@@ -197,11 +202,10 @@ async function Paper({ no = "", c = false }) {
             <div className="sign">
               <Image
                 src="/static/images/sign.jpg"
-                alt="CY logo"
+                alt="logo"
                 width={170}
                 height={80}
                 quality={100}
-                unoptimized
               />
             </div>
             <div>วันที่ : {new Date(Date.now()).toLocaleDateString("th")}</div>

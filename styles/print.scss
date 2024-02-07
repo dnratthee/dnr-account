@@ -15,6 +15,11 @@ body {
   width: 100%;
 }
 
+a {
+  text-decoration: none;
+  color: #000;
+}
+
 p {
   white-space: pre-line;
 }
@@ -219,7 +224,7 @@ p {
           > :first-child {
             display: flex;
             width: 35px;
-            justify-content: end;
+            justify-content: flex-end;
           }
           > *:nth-child(2) {
             display: flex;
@@ -237,12 +242,12 @@ p {
           *:nth-child(6) {
             display: flex;
             flex: 0.6 0;
-            justify-content: end;
+            justify-content: flex-end;
           }
           *:nth-child(7) {
             display: flex;
             flex: 0.7 0;
-            justify-content: end;
+            justify-content: flex-end;
           }
         }
       }
@@ -290,7 +295,7 @@ p {
           > :first-child {
             display: flex;
             width: 35px;
-            justify-content: end;
+            justify-content: flex-end;
           }
           > *:nth-child(2) {
             display: flex;
@@ -307,13 +312,13 @@ p {
           > *:nth-child(3) {
             display: flex;
             flex: 0.6 0;
-            justify-content: end;
+            justify-content: flex-end;
           }
           *:nth-child(5),
           *:nth-child(7) {
             display: flex;
             flex: 0.7 0;
-            justify-content: end;
+            justify-content: flex-end;
           }
         }
       }
@@ -335,7 +340,13 @@ p {
     display: flex;
     flex: 1;
     flex-direction: column;
-    justify-content: end;
+    justify-content: flex-end;
+    *:first-child {
+      justify-content: left;
+      > * {
+        padding-right: 16px;
+      }
+    }
     > * {
       padding-bottom: 8px;
       display: flex;
@@ -353,7 +364,7 @@ p {
   .footer {
     display: flex;
     gap: 0px 40px;
-    align-items: end;
+    align-items: flex-end;
     .box {
       display: flex;
       flex-direction: column;
@@ -386,5 +397,5 @@ p {
 }
 
 .end {
-  justify-content: end !important;
+  justify-content: flex-end !important;
 }

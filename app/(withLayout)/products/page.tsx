@@ -7,12 +7,30 @@ export const metadata: Metadata = {
   title: "DNR Account :: Products",
 };
 
-export default async function Page() {
-  const products = await prisma.product.findMany();
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    limit?: string;
+    query?: string;
+    page?: string;
+    status?: string;
+    name?: string;
+    no?: string;
+  };
+}) {
+  const products = await prisma.product.findMany({
+    include: {
+      unit: true,
+    },
+  });
 
   return (
     <div>
-      <ProductList list={products} />
+      <div className="title">สินค้า</div>
+      <div className="table">
+        <ProductList list={products} searchParams={searchParams} />
+      </div>
     </div>
   );
 }

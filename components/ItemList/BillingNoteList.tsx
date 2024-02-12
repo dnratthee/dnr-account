@@ -26,23 +26,26 @@ export default ({ list, searchParams }) => {
         let sum = 0;
         if (data.invoices[0])
           return (
-            <Link key={data.no} href={`/billing-notes/${data.no}/print`}>
-              {/* href={`/billing-notes/${data.no}` */}
-              <div
-                className={`tr data ${
-                  data.BillingNoteStatus[0] &&
-                  data.BillingNoteStatus[0].status.id == 4
-                    ? "void"
-                    : ""
-                }`}
-              >
+            <div
+              key={data.no}
+              className={`tr data ${
+                data.BillingNoteStatus[0] &&
+                data.BillingNoteStatus[0].status.id == 4
+                  ? "void"
+                  : ""
+              }`}
+            >
+              <Link href={`/billing-notes/${data.no}/print`}>
                 {/* <div className="td box">_</div> */}
                 <div className="td">
                   {data.createDate.toLocaleDateString("th")}
                 </div>
                 <div className="td">{data.no}</div>
                 <div className="td">
-                  {data.invoices[0] ? data.invoices[0].shipping.name : ""}
+                  {data.invoices[0].contact.name}
+                  {data.invoices[0].contact.company
+                    ? " - " + data.invoices[0].contact.company.name
+                    : ""}
                 </div>
                 <div className="td">
                   {plusDate(data.createDate, data.credit).toLocaleDateString(
@@ -56,14 +59,23 @@ export default ({ list, searchParams }) => {
                       .reduce((x, y) => Number(x) + Number(y))
                   )}
                 </div>
-                <div className="td">
-                  {data.BillingNoteStatus[0]
-                    ? data.BillingNoteStatus[0].status.name
-                    : "Awaiting"}
-                </div>
-                {/* <div className="td box">...</div> */}
+              </Link>
+              <div className="td">
+                {data.BillingNoteStatus[0] ? (
+                  data.BillingNoteStatus[0].status.name
+                ) : data.invoices[0].Receipt ? (
+                  <Link
+                    className="success"
+                    href={`receipts/${data.invoices[0].Receipt.no}/print`}
+                  >
+                    Receipt created
+                  </Link>
+                ) : (
+                  "Awaiting"
+                )}
               </div>
-            </Link>
+              {/* <div className="td box">...</div> */}
+            </div>
           );
       })}
     </>

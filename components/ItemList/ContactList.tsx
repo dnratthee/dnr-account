@@ -12,29 +12,21 @@ export default ({ list, searchParams }) => {
       <div className="tr header">
         {/* <div className="th box">_</div> */}
         <div className="th"></div>
-        <div className="th">รหัส</div>
-        <div className="th">ชื่อ</div>
-        <div className="th">หน่วย</div>
-        <div className="th">ราคา/หน่วย</div>
+        <div className="th">รายชื่อ</div>
         {/* <div className="th"></div> */}
       </div>
-      <SearchBox searchParams={searchParams} />
+      {/* <SearchBox searchParams={searchParams} /> */}
       {/* {data.name} {data.nameForeign} {data.code} {data.sellingPrice.toString()} */}
       <div className="data">
         {list.map((data) => {
           return (
-            <div key={data.code} className={`tr data`}>
+            <div key={data.id} className={`tr data`}>
               {/* <div className="td box">
             <input type="checkbox" />
           </div> */}
-              <Link href={`/products/${data.code}`}>
+              <Link href={`/contacts/${data.id}`}>
                 <div className="td"></div>
-                <div className="td">{data.code}</div>
                 <div className="td">{data.name}</div>
-                <div className="td">{data.unit.name}</div>
-                <div className="td">
-                  {number.format(Number(data.sellingPrice))}
-                </div>
                 {/* <div className="td"></div> */}
               </Link>
               {/* <div className="td box">...</div> */}

@@ -19,4 +19,5 @@ const withPWA = require("next-pwa")({
   skipWaiting: true, // Skip waiting for service worker activation
 });
 
-module.exports = withPWA(nextConfig);
+// module.exports = withPWA(nextConfig);
+module.exports = nextConfig;

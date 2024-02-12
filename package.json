@@ -32,7 +32,6 @@
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.5.4",
     "@prisma/client": "^5.9.1",
-    "@react-pdf/renderer": "^3.3.4",
     "bahttext": "^2.3.0",
     "boxicons": "^2.1.4",
     "negotiator": "^0.6.3",

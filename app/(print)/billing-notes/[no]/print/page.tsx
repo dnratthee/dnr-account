@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
+import { redirect } from "next/navigation";
 import prisma from "~/lib/prisma";
 import { bahttext } from "bahttext";
 import { number, plusDate, phone } from "~/lib/utils/formatter";
@@ -19,12 +19,30 @@ async function Paper({ no = "", c = false }) {
   const bill = await prisma.billingNote.findUnique({
     where: { no: no },
     include: {
+      BillingNoteStatus: {
+        orderBy: { createDate: "desc" },
+        take: 1,
+      },
       invoices: {
-        include: { shipping: true, customer: true },
+        include: {
+          contact: { include: { company: true } },
+          Receipt: {
+            include: {
+              ReceiptStatus: {
+                orderBy: { createDate: "desc" },
+                take: 1,
+              },
+            },
+          },
+        },
         orderBy: { date: "asc" },
       },
     },
   });
+
+  if (!bill) {
+    redirect("/billing-notes");
+  }
 
   return bill ? (
     <section className="sheet padding-10mm">
@@ -64,25 +82,34 @@ async function Paper({ no = "", c = false }) {
               <div className="customerShipping">
                 <div className="label">ลูกค้า : </div>
                 <div className="brunch">
-                  {bill.invoices[0].CompanyId.length >= 10
-                    ? "สาขา : " + ("0000" + bill.invoices[0].BranchId).slice(-5)
+                  {bill.invoices[0] &&
+                  bill.invoices[0].contact.taxId &&
+                  bill.invoices[0].contact.taxId.length >= 10
+                    ? "สาขา : " +
+                      ("0000" + bill.invoices[0].contact.branchId).slice(-5)
                     : ""}
                 </div>
                 <p>
-                  {bill.invoices[0].address !== null
-                    ? bill.invoices[0].address
-                    : bill.invoices[0].customer.name +
+                  {bill.invoices[0] && bill.invoices[0].contact.company
+                    ? bill.invoices[0].contact.company.name +
                       "\n" +
-                      bill.invoices[0].customer.address}
+                      (bill.invoices[0].contact.company.address || "")
+                    : bill.invoices[0] &&
+                      bill.invoices[0].contact.name +
+                        "\n" +
+                        (bill.invoices[0].contact.address || "")}
                 </p>
                 <p>
-                  {bill.invoices[0].CompanyId.length >= 10
-                    ? "เลขประจำตัวผู้เสียภาษี : " + bill.invoices[0].CompanyId
+                  {bill.invoices[0] &&
+                  bill.invoices[0].contact.taxId &&
+                  bill.invoices[0].contact.taxId.length >= 10
+                    ? "เลขประจำตัวผู้เสียภาษี : " +
+                      bill.invoices[0].contact.taxId
                     : ""}
                 </p>
                 <p>
-                  {bill.invoices[0].shipping.phone
-                    ? "เบอร์ติดต่อ : " + phone(bill.invoices[0].shipping.phone)
+                  {bill.invoices[0] && bill.invoices[0].contact.phone
+                    ? "เบอร์ติดต่อ : " + phone(bill.invoices[0].contact.phone)
                     : ""}
                 </p>
               </div>
@@ -131,7 +158,7 @@ async function Paper({ no = "", c = false }) {
               <div>เลขที่เอกสาร</div>
               <div>เอกสารวันที่</div>
               <div>วันครบกำหนด</div>
-              <div>ยอดรวมก่อนภาษี</div>
+              <div>ยอดก่อนภาษี</div>
               <div>มูลค่าที่ต้องชำระ</div>
             </div>
 
@@ -184,6 +211,19 @@ async function Paper({ no = "", c = false }) {
             </div>
           </div>
         </div>
+
+        {bill.BillingNoteStatus[0] ? (
+          bill.BillingNoteStatus[0].billingNoteStatusTypeId == 4 ? (
+            <div className="watermark void">VOID</div>
+          ) : (
+            ""
+          )
+        ) : bill.invoices[0].Receipt &&
+          bill.invoices[0].Receipt.ReceiptStatus[0].receiptStatusTypeId == 2 ? (
+          <div className="watermark">PAID</div>
+        ) : (
+          ""
+        )}
 
         <div className="remark">
           <p>หมายเหตุ : {bill.remark}</p>

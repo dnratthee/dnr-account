@@ -19,35 +19,35 @@ async function Paper({ no = "", c = false }) {
   let sumVat = 0;
   let itemId = 0;
 
-  const invoice = await prisma.invoice.findUnique({
+  const cash = await prisma.cashInvoice.findUnique({
     where: { no: no },
     include: {
-      contact: {
+      Invoice: {
         include: {
-          company: true,
-        },
-      },
-      InvoiceDetail: {
-        include: {
-          product: {
+          InvoiceDetail: {
             include: {
-              unit: true,
+              product: {
+                include: {
+                  unit: true,
+                },
+              },
             },
+            orderBy: [
+              {
+                productId: "asc",
+              },
+              {
+                amount: "asc",
+              },
+            ],
           },
+          contact: true,
         },
-        orderBy: [
-          {
-            productId: "asc",
-          },
-          {
-            amount: "asc",
-          },
-        ],
       },
     },
   });
 
-  return invoice ? (
+  return cash ? (
     <section className="sheet padding-10mm">
       <div className="page">
         <div className="header">
@@ -61,59 +61,27 @@ async function Paper({ no = "", c = false }) {
                 quality={100}
               />
             </div>
-            <div className="detail">
-              <p>{process.env.NEXT_PUBLIC_company_name}</p>
-              <p>{process.env.NEXT_PUBLIC_company_address}</p>
-              <p>
-                เลขประจำตัวผู้เสียภาษี : {process.env.NEXT_PUBLIC_company_taxID}
-              </p>
-              {/* <p>เบอร์ติดต่อ : {process.env.NEXT_PUBLIC_company_phone}</p> */}
-            </div>
+            <div className="detail"></div>
           </div>
           <div className="name">
             <div>
-              <p>ใบส่งของ / ใบแจ้งหนี้ /</p>
-              <p>ใบกำกับภาษี</p>
+              <p>ใบกำกับภาษีอย่างย่อ /</p>
+              <p>ใบเสร็จรับเงิน</p>
             </div>
             <div>{c ? "ต้นฉบับลูกค้า" : "สำเนาผู้ขาย"}</div>
           </div>
         </div>
         <div className="body">
-          <div className="header">
+          <div className="header cash">
             <div className="customer">
               <div className="customerDetail">
-                <div className="label">ลูกค้า : </div>
-                <div className="brunch">
-                  {invoice.contact.taxId && invoice.contact.taxId.length >= 10
-                    ? "สาขา : " + ("0000" + invoice.contact.branchId).slice(-5)
-                    : ""}
-                </div>
+                <p>{process.env.NEXT_PUBLIC_company_name}</p>
+                <p>{process.env.NEXT_PUBLIC_company_address}</p>
                 <p>
-                  {invoice.contact.company
-                    ? invoice.contact.company.name + "\n"
-                    : invoice.contact.name + "\n"}
-                  {invoice.address ? invoice.address : invoice.contact.address}
+                  เลขประจำตัวผู้เสียภาษี :{" "}
+                  {process.env.NEXT_PUBLIC_company_taxID}
                 </p>
-                <p>
-                  {invoice.contact.taxId && invoice.contact.taxId.length >= 10
-                    ? "เลขประจำตัวผู้เสียภาษี : " + invoice.contact.taxId
-                    : ""}
-                </p>
-              </div>
-              <div className="customerShipping">
-                <div className="label">ส่งของที่ : </div>
-                <p>
-                  {invoice.shippingAddress
-                    ? invoice.shippingAddress
-                    : invoice.contact.shippingAddress &&
-                      invoice.contact.contactPerson
-                    ? invoice.contact.contactPerson +
-                      "\n" +
-                      invoice.contact.shippingAddress
-                    : invoice.contact.name +
-                      "\n" +
-                      invoice.contact.shippingAddress}
-                </p>
+                {/* <p>เบอร์ติดต่อ : {process.env.NEXT_PUBLIC_company_phone}</p> */}
               </div>
             </div>
             <div className="shippingDetail">
@@ -122,46 +90,14 @@ async function Paper({ no = "", c = false }) {
                   <p>เลขที่ :</p>
                   <p>Bill No.</p>
                 </div>
-                <p>{invoice.no}</p>
+                <p>{cash.no}</p>
               </div>
               <div className="shippingDate">
                 <div className="left">
                   <p>วันที่ :</p>
                   <p>Date</p>
                 </div>
-                <p>{invoice.date.toLocaleDateString("th")}</p>
-              </div>
-              <div>
-                <div className="left">
-                  <p>หมายเลขใบสั่งซื้อ</p>
-                  <p>P/O No.</p>
-                </div>
-                <p>{invoice.po}</p>
-              </div>
-              <div>
-                <div className="left">
-                  <p>เครดิต :</p>
-                  <p>Credit</p>
-                </div>
-                <p>
-                  {invoice.credit
-                    ? invoice.credit + " วัน"
-                    : invoice.contact.credit
-                    ? invoice.contact.credit + " วัน"
-                    : ""}
-                </p>
-              </div>
-              <div>
-                <div className="left">
-                  <p>ครบกำหนด :</p>
-                  <p>Due Date</p>
-                </div>
-                <p>
-                  {plusDate(
-                    invoice.date,
-                    invoice.credit || invoice.contact.credit
-                  ).toLocaleDateString("th")}
-                </p>
+                <p>{cash.Invoice.date.toLocaleDateString("th")}</p>
               </div>
             </div>
           </div>
@@ -176,7 +112,7 @@ async function Paper({ no = "", c = false }) {
               <div>จำนวนเงิน (บาท)</div>
             </div>
 
-            {invoice.InvoiceDetail.map((item, index) => {
+            {cash.Invoice.InvoiceDetail.map((item, index) => {
               itemId += 1;
               let price = Number(item.price) * Number(item.amount);
               let pricev = price;
@@ -238,25 +174,50 @@ async function Paper({ no = "", c = false }) {
         </div>
 
         <div className="remark">
-          <p>{invoice.remark ? "หมายเหตุ : " + invoice.remark : ""}</p>
+          <p>
+            {cash.Invoice.remark ? "หมายเหตุ : " + cash.Invoice.remark : ""}
+          </p>
           <p>วิธีการชำระเงิน : {process.env.NEXT_PUBLIC_company_payment} </p>
+        </div>
+
+        <div className="payment">
+          <div>
+            <div>การชำระเงินจะสมบูรณ์ เมื่อบริษัทได้รับเงินเรียบร้อยแล้ว</div>
+            <div>
+              <input type="checkbox"></input> เงินสด
+            </div>
+            <div>
+              <input type="checkbox"></input> เช็ค
+            </div>
+            <div>
+              <input type="checkbox"></input> โอนเงิน
+            </div>
+          </div>
+          <div>
+            <div>ธนาคาร</div>
+            <div></div>
+            <div>เลขที่</div>
+            <div></div>
+            <div>วันที่</div>
+            <div></div>
+            <div>จำนวนเงิน</div>
+            <div></div>
+          </div>
         </div>
 
         <div className="footer">
           <div className="box">
-            <div>ผู้ส่งสินค้า :</div>
+            <div>ผู้จ่ายเงิน :</div>
             <div></div>
             <div>วันที่ : </div>
-            {/* <div>เวลา : </div> */}
           </div>
-          <div className="box">
+          {/* <div className="box">
             <div>ผู้รับสินค้า :</div>
             <div></div>
             <div>วันที่ : </div>
-            {/* <div>เวลา : </div> */}
-          </div>
+          </div> */}
           <div className="box">
-            <div>ผู้อนุมัติ :</div>
+            <div>ผู้รับเงิน :</div>
             <div className="sign">
               <Image
                 src="/static/images/sign.jpg"

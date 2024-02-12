@@ -39,30 +39,60 @@ export default ({ list, searchParams }) => {
               <Link href={`/invoices/${data.no}/print`}>
                 <div className="td">{data.date.toLocaleDateString("th")}</div>
                 <div className="td">{data.no}</div>
-                <div className="td">{data.shipping.name}</div>
+                <div className="td">
+                  {data.contact.name}
+                  {data.contact.company
+                    ? " - " + data.contact.company.name
+                    : ""}
+                </div>
                 <div className="td">
                   {plusDate(data.date, data.credit).toLocaleDateString("th")}
                 </div>
-                <div className="td">{number.format(Number(data.netTotal))}</div>
+                <div className={`td ${data.netTotal <= 0 ? "warning" : ""}`}>
+                  {data.netTotal <= 0
+                    ? "ยังไม่คำนวน"
+                    : number.format(Number(data.netTotal))}
+                </div>
               </Link>
               <div className="td">
                 {data.InvoiceStatus[0] &&
                 data.InvoiceStatus[0].status.id > 2 ? (
                   data.InvoiceStatus[0].status.name
                 ) : data.Receipt ? (
-                  <Link
-                    className="success"
-                    href={`receipts/${data.Receipt.no}/print`}
-                  >
-                    Receipt created
-                  </Link>
+                  data.Receipt.ReceiptStatus[0] &&
+                  data.Receipt.ReceiptStatus[0].receiptStatusTypeId > 2 ? (
+                    <Link
+                      className="void"
+                      href={`receipts/${data.Receipt.no}/print`}
+                    >
+                      Receipt Void
+                    </Link>
+                  ) : (
+                    <Link
+                      className="success"
+                      href={`receipts/${data.Receipt.no}/print`}
+                    >
+                      Receipt created
+                    </Link>
+                  )
                 ) : data.BillingNote ? (
-                  <Link
-                    className="wait"
-                    href={`billing-notes/${data.BillingNote.no}/print`}
-                  >
-                    Payment Due
-                  </Link>
+                  data.BillingNote.BillingNoteStatus[0] &&
+                  data.BillingNote.BillingNoteStatus[0]
+                    .billingNoteStatusTypeId > 3 ? (
+                    <Link
+                      className="void"
+                      href={`billing-notes/${data.BillingNote.no}/print`}
+                    >
+                      Payment Bill Void
+                    </Link>
+                  ) : (
+                    <Link
+                      className="wait"
+                      href={`billing-notes/${data.BillingNote.no}/print`}
+                    >
+                      Payment Due
+                    </Link>
+                  )
                 ) : (
                   <Link href={`/invoices/${data.no}/print`}>Awaiting</Link>
                 )}

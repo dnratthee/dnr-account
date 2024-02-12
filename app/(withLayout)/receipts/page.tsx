@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import prisma from "~/lib/prisma";
 import { ReceiptList } from "~/components/ItemList";
 import Pagination from "~/components/Pagination";
+import { number } from "~/lib/utils/formatter";
 
 export const metadata: Metadata = {
   title: "DNR Account :: Receipts",
@@ -30,11 +31,24 @@ export default async function Page({
         no: { contains: no },
         invoices: {
           every: {
-            shipping: {
-              name: {
-                contains: name,
+            OR: [
+              {
+                contact: {
+                  name: {
+                    contains: name,
+                  },
+                },
               },
-            },
+              {
+                contact: {
+                  company: {
+                    name: {
+                      contains: name,
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
       },
@@ -46,17 +60,38 @@ export default async function Page({
       no: { contains: no },
       invoices: {
         every: {
-          shipping: {
-            name: {
-              contains: name,
+          OR: [
+            {
+              contact: {
+                name: {
+                  contains: name,
+                },
+              },
             },
-          },
+            {
+              contact: {
+                company: {
+                  name: {
+                    contains: name,
+                  },
+                },
+              },
+            },
+          ],
         },
       },
     },
     include: {
-      invoices: { include: { shipping: true } },
-      ReceiptStatus: { include: { status: true } },
+      invoices: { include: { contact: { include: { company: true } } } },
+      ReceiptStatus: {
+        include: {
+          status: true,
+        },
+        orderBy: {
+          createDate: "desc",
+        },
+        take: 1,
+      },
     },
     orderBy: {
       createDate: "desc",
@@ -73,6 +108,21 @@ export default async function Page({
         currentPage={currentPage}
         totalPages={Math.ceil(count / limit)}
       />
+      <div>
+        Total :{" "}
+        {bill.length >= 1 &&
+          number.format(
+            bill
+              .map((x) =>
+                Number(
+                  x.invoices
+                    .map((x) => Number(x.netTotal))
+                    .reduce((x, y) => Number(x) + Number(y))
+                )
+              )
+              .reduce((x, y) => Number(x) + Number(y))
+          )}
+      </div>
     </>
   );
 }

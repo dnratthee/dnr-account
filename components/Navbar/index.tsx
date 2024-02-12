@@ -9,7 +9,7 @@ const MENU_LIST = [
   { text: "Billing Note", href: "/billing-notes", icon: "spreadsheet" },
   { text: "Invoice", href: "/invoices", icon: "package" },
   { text: "Receipt", href: "/receipts", icon: "receipt" },
-  // { text: "Cash", href: "/cash-invoices", icon: "money" },
+  { text: "Cash", href: "/cash-invoices", icon: "money" },
 
   // {
   //   text: "Purchase Order",
@@ -18,7 +18,7 @@ const MENU_LIST = [
   // },
   // { text: "Purchases", href: "/purchases", icon: "cart" },
 
-  // { text: "Expenses", href: "/expenses", icon: "dollar" },
+  { text: "Expenses", href: "/expenses", icon: "dollar" },
   // { text: "Withholding TAX", href: "/withholding-tax", icon: "dollar" },
   // { text: "Payment Slip", href: "/payment-slip", icon: "receipt" },
 

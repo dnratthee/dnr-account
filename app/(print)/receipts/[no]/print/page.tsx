@@ -19,7 +19,10 @@ async function Paper({ no = "", c = false }) {
   const receipt = await prisma.receipt.findUnique({
     where: { no: no },
     include: {
-      invoices: { include: { shipping: true, BillingNote: true } },
+      ReceiptStatus: true,
+      invoices: {
+        include: { contact: { include: { company: true } }, BillingNote: true },
+      },
     },
   });
 
@@ -61,28 +64,32 @@ async function Paper({ no = "", c = false }) {
               <div className="customerShipping">
                 <div className="label">ลูกค้า : </div>
                 <div className="brunch">
-                  {receipt.invoices[0].CompanyId.length >= 10
+                  {receipt.invoices[0].contact.taxId &&
+                  receipt.invoices[0].contact.taxId.length >= 10
                     ? "สาขา : " +
-                      ("0000" + receipt.invoices[0].BranchId).slice(-5)
+                      ("0000" + receipt.invoices[0].contact.branchId).slice(-5)
                     : ""}
                 </div>
                 <p>
-                  {receipt.invoices[0].address !== null
-                    ? receipt.invoices[0].address
-                    : receipt.invoices[0].shipping.name +
+                  {receipt.invoices[0].contact.company
+                    ? receipt.invoices[0].contact.company.name +
                       "\n" +
-                      receipt.invoices[0].shipping.address}
+                      (receipt.invoices[0].contact.company.address || "")
+                    : receipt.invoices[0].contact.name +
+                      "\n" +
+                      (receipt.invoices[0].contact.address || "")}
                 </p>
                 <p>
-                  {receipt.invoices[0].CompanyId.length >= 10
+                  {receipt.invoices[0].contact.taxId &&
+                  receipt.invoices[0].contact.taxId.length >= 10
                     ? "เลขประจำตัวผู้เสียภาษี : " +
-                      receipt.invoices[0].CompanyId
+                      receipt.invoices[0].contact.taxId
                     : ""}
                 </p>
                 <p>
-                  {receipt.invoices[0].shipping.phone
+                  {receipt.invoices[0].contact.phone
                     ? "เบอร์ติดต่อ : " +
-                      phone(receipt.invoices[0].shipping.phone)
+                      phone(receipt.invoices[0].contact.phone)
                     : ""}
                 </p>
               </div>
@@ -140,7 +147,7 @@ async function Paper({ no = "", c = false }) {
               <div>เลขที่เอกสาร</div>
               <div>เอกสารวันที่</div>
               <div>วันครบกำหนด</div>
-              <div>ยอดรวมก่อนภาษี</div>
+              <div>ยอดก่อนภาษี</div>
               <div>มูลค่าที่ต้องชำระ</div>
             </div>
 
@@ -198,6 +205,13 @@ async function Paper({ no = "", c = false }) {
           {/* <p>หมายเหตุ : {receipt.remark}</p>
           <p>วิธีการชำระเงิน : {process.env.NEXT_PUBLIC_company_payment} </p> */}
         </div>
+
+        {receipt.ReceiptStatus[0] &&
+        receipt.ReceiptStatus[0].receiptStatusTypeId == 2 ? (
+          <div className="watermark">PAID</div>
+        ) : (
+          ""
+        )}
 
         <div className="payment">
           <div>

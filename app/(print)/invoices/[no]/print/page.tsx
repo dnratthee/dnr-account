@@ -107,7 +107,7 @@ async function Paper({ no = "", c = false }) {
                     ? invoice.shippingAddress
                     : invoice.contact.shippingAddress &&
                       invoice.contact.contactPerson
-                    ? invoice.contact.contactPerson +
+                    ? invoice.contact.name +
                       "\n" +
                       invoice.contact.shippingAddress
                     : invoice.contact.name +

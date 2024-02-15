@@ -42,7 +42,11 @@ export default ({ list, searchParams }) => {
                     ? " - " + data.Contact.name
                     : ""}
                 </div>
-                <div className="td">{data.ExpensesDetail[0].category.name}</div>
+                <div className="td">
+                  {data.ExpensesDetail[0]
+                    ? data.ExpensesDetail[0].category.name
+                    : ""}
+                </div>
                 <div className="td">{number.format(data.netTotal)}</div>
                 <div className="td">...</div>
                 {/* <div className="td"></div> */}

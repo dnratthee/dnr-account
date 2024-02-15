@@ -97,7 +97,7 @@ async function Paper({ no = "", c = false }) {
                   <p>วันที่ :</p>
                   <p>Date</p>
                 </div>
-                <p>{cash.Invoice.date.toLocaleDateString("th")}</p>
+                <p>{cash.createDate.toLocaleDateString("th")}</p>
               </div>
             </div>
           </div>

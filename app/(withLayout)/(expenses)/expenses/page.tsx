@@ -18,11 +18,13 @@ export default async function Page({
     status?: string;
     name?: string;
     no?: string;
+    cat?: string;
   };
 }) {
   let total = 1;
   const no = searchParams?.no || "";
   const name = searchParams?.name || "";
+  const cat = searchParams?.cat || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 20;
 
@@ -51,8 +53,26 @@ export default async function Page({
         name: {
           contains: name,
         },
+        Expenses: {
+          every: {
+            ExpensesDetail: {
+              every: {
+                category: {
+                  name: {
+                    contains: cat,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
+    orderBy: {
+      date: "desc",
+    },
+    skip: (currentPage - 1) * limit,
+    take: limit,
   });
 
   return (

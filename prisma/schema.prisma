@@ -129,6 +129,7 @@ model Invoice {
 model Expenses {
   no             String   @id @default("EXPYYYYMM-CCCC")
   po             String?
+  ref            String?
   Contact        Contact  @relation(fields: [contactId], references: [id])
   credit         Int      @default(0)
   date           DateTime @default(now())
@@ -143,7 +144,7 @@ model Expenses {
 
   contactId       Int
   projectId       Int?
-  paymentId       Int?
+  paymentId       Int?              @unique
   ExpensesDetail  ExpensesDetail[]
   ExpensesInvoice ExpensesInvoice[]
 }
@@ -264,7 +265,7 @@ model Receipt {
 
   scanDoc   DocImage[]
   Payment   Payment?   @relation(fields: [paymentId], references: [id])
-  paymentId Int?
+  paymentId Int?       @unique
 }
 
 model ReceiptStatus {
@@ -399,9 +400,11 @@ model BankAccountType {
 }
 
 model Payment {
-  id     Int         @id @default(autoincrement())
-  type   PaymentType @relation(fields: [typeId], references: [id])
-  typeId Int
+  id       Int         @id @default(autoincrement())
+  type     PaymentType @relation(fields: [typeId], references: [id])
+  Receipt  Receipt?
+  Expenses Expenses?
+  netTotal Decimal
 
   chequeDate        DateTime?
   chequeNo          String?
@@ -414,8 +417,7 @@ model Payment {
   detail        String?
   remark        String?
   bankAccountId Int?
-  Receipt       Receipt[]
-  Expenses      Expenses[]
+  typeId        Int
 }
 
 model PaymentType {

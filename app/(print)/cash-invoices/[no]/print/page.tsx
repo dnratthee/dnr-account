@@ -168,7 +168,9 @@ async function Paper({ no = "", c = false }) {
                 <div>({bahttext(sum - sumDis)})</div>
                 <div>ยอดรวมสุทธิ</div>
               </div>
-              <div className="nettotal">{number.format(sum - sumDis)}</div>
+              <div className="nettotal">
+                {number.format(Math.floor(sum - sumDis))}
+              </div>
             </div>
           </div>
         </div>

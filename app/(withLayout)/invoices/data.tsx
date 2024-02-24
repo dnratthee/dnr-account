@@ -9,71 +9,67 @@ export default async function Data({
 }: {
   searchParams?: {
     limit?: string;
-    query?: string;
     page?: string;
     status?: string;
     name?: string;
     no?: string;
+    from?: string;
+    to?: string;
+    all?: string;
   };
 }) {
   const no = searchParams?.no || "";
   const name = searchParams?.name || "";
   const currentPage = Number(searchParams?.page) || 1;
   const limit = Number(searchParams?.limit) || 20;
+  const created = searchParams?.all == "1" ? false : true || true;
+
+  const fromDate = searchParams?.from || "2024-01";
+  const toDate = searchParams?.to || "2024-12";
 
   const status = searchParams?.status || "";
-  const query = searchParams?.query || {};
 
-  const count = (
-    await prisma.invoice.findMany({
-      where: {
-        created: true,
-        no: { contains: no },
-        OR: [
-          {
-            contact: {
-              name: {
-                contains: name,
-              },
-            },
+  let filter: { [k: string]: any } = {
+    created: true,
+    no: { contains: no },
+    date: { gte: new Date(fromDate), lt: new Date(toDate) },
+    OR: [
+      {
+        contact: {
+          name: {
+            contains: name,
           },
-          {
-            contact: {
-              company: {
-                name: {
-                  contains: name,
-                },
-              },
-            },
-          },
-        ],
+        },
       },
-    })
-  ).length;
-
-  const invoice = await prisma.invoice.findMany({
-    where: {
-      created: true,
-      no: { contains: no },
-      OR: [
-        {
-          contact: {
+      {
+        contact: {
+          company: {
             name: {
               contains: name,
             },
           },
         },
-        {
-          contact: {
-            company: {
-              name: {
-                contains: name,
-              },
-            },
-          },
-        },
-      ],
-    },
+      },
+    ],
+  };
+
+  // filter.where.created = false;
+
+  const constructedWhere = Object.keys(filter).reduce((k, p) => {
+    k[p] = filter[p];
+    return k;
+  }, {});
+
+  // (searchParams?.all ? created: created : created: created),
+
+  const count = (
+    await prisma.invoice.findMany({
+      where: constructedWhere,
+    })
+  ).length;
+
+  const invoice = await prisma.invoice.findMany({
+    where: constructedWhere,
     include: {
       BillingNote: {
         include: {
@@ -115,6 +111,7 @@ export default async function Data({
       <Pagination
         currentPage={currentPage}
         totalPages={Math.ceil(count / limit)}
+        searchParams={searchParams}
       />
       <div>
         Total :{" "}

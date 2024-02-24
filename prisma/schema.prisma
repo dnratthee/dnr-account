@@ -265,7 +265,7 @@ model Receipt {
 
   scanDoc   DocImage[]
   Payment   Payment?   @relation(fields: [paymentId], references: [id])
-  paymentId Int?       @unique
+  paymentId Int?
 }
 
 model ReceiptStatus {
@@ -385,6 +385,7 @@ model bankAccount {
   id              Int             @id @default(autoincrement())
   Bank            Bank            @relation(fields: [bankId], references: [id])
   branch          String?
+  noAccount       String?
   nameAccount     String?
   BankAccountType BankAccountType @relation(fields: [bankAccountTypeId], references: [id])
 
@@ -402,7 +403,7 @@ model BankAccountType {
 model Payment {
   id       Int         @id @default(autoincrement())
   type     PaymentType @relation(fields: [typeId], references: [id])
-  Receipt  Receipt?
+  Receipt  Receipt[]
   Expenses Expenses?
   netTotal Decimal
 

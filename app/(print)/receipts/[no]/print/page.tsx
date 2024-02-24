@@ -23,6 +23,7 @@ async function Paper({ no = "", c = false }) {
       invoices: {
         include: { contact: { include: { company: true } }, BillingNote: true },
       },
+      Payment: true,
     },
   });
 
@@ -217,24 +218,59 @@ async function Paper({ no = "", c = false }) {
           <div>
             <div>การชำระเงินจะสมบูรณ์ เมื่อบริษัทได้รับเงินเรียบร้อยแล้ว</div>
             <div>
-              <input type="checkbox"></input> เงินสด
+              <input
+                type="checkbox"
+                checked={
+                  receipt.Payment && receipt.Payment.typeId == 1 ? true : false
+                }
+              ></input>{" "}
+              เงินสด
             </div>
             <div>
-              <input type="checkbox"></input> เช็ค
+              <input
+                type="checkbox"
+                checked={
+                  receipt.Payment && receipt.Payment.typeId == 3 ? true : false
+                }
+              ></input>{" "}
+              เช็ค
             </div>
             <div>
-              <input type="checkbox"></input> โอนเงิน
+              <input
+                type="checkbox"
+                checked={
+                  receipt.Payment && receipt.Payment.typeId == 2 ? true : false
+                }
+              ></input>{" "}
+              โอนเงิน
             </div>
           </div>
           <div>
             <div>ธนาคาร</div>
-            <div></div>
+            <div>{receipt.Payment ? receipt.Payment.operatorName : ""}</div>
             <div>เลขที่</div>
-            <div></div>
+            <div>{receipt.Payment ? receipt.Payment.chequeNo : ""}</div>
             <div>วันที่</div>
-            <div></div>
+            <div>
+              {receipt.Payment && receipt.Payment.typeId == 3
+                ? receipt.Payment.chequeDate.toLocaleString("th", {
+                    timeZone: "Asia/Bangkok",
+                    dateStyle: "short",
+                  })
+                : receipt.Payment && receipt.Payment
+                ? receipt.Payment.chequeDate.toLocaleString("th", {
+                    timeZone: "Asia/Bangkok",
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })
+                : ""}
+            </div>
             <div>จำนวนเงิน</div>
-            <div></div>
+            <div>
+              {receipt.Payment
+                ? number.format(Number(receipt.Payment.netTotal))
+                : ""}
+            </div>
           </div>
         </div>
 

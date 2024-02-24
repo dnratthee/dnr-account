@@ -20,7 +20,7 @@ async function Paper({ no = "", c = false }) {
   let itemId = 0;
 
   const invoice = await prisma.invoice.findUnique({
-    where: { no: no },
+    where: { no: "QT202402-0001" },
     include: {
       contact: {
         include: {
@@ -48,7 +48,11 @@ async function Paper({ no = "", c = false }) {
   });
 
   return invoice ? (
-    <section className="sheet padding-10mm">
+    <section
+      className={`sheet padding-10mm ${
+        invoice.InvoiceDetail.length <= 1 ? "A5" : ""
+      }`}
+    >
       <div className="page">
         <div className="header">
           <div className="companySender">
@@ -72,14 +76,14 @@ async function Paper({ no = "", c = false }) {
           </div>
           <div className="name">
             <div>
-              <p>ใบส่งของ / ใบแจ้งหนี้ /</p>
-              <p>ใบกำกับภาษี</p>
+              <p>ใบเสนอราคา</p>
+              <p></p>
             </div>
-            <div>{c ? "ต้นฉบับลูกค้า" : "สำเนาผู้ขาย"}</div>
+            {/* <div>{c ? "ต้นฉบับลูกค้า" : "สำเนาผู้ขาย"}</div> */}
           </div>
         </div>
         <div className="body">
-          <div className="header">
+          <div className="header qt">
             <div className="customer">
               <div className="customerDetail">
                 <div className="label">ลูกค้า : </div>
@@ -100,21 +104,6 @@ async function Paper({ no = "", c = false }) {
                     : ""}
                 </p>
               </div>
-              <div className="customerShipping">
-                <div className="label">ส่งของที่ : </div>
-                <p>
-                  {invoice.shippingAddress
-                    ? invoice.shippingAddress
-                    : invoice.contact.shippingAddress &&
-                      invoice.contact.contactPerson
-                    ? invoice.contact.name +
-                      "\n" +
-                      invoice.contact.shippingAddress
-                    : invoice.contact.name +
-                      "\n" +
-                      invoice.contact.shippingAddress}
-                </p>
-              </div>
             </div>
             <div className="shippingDetail">
               <div className="no">
@@ -131,14 +120,7 @@ async function Paper({ no = "", c = false }) {
                 </div>
                 <p>{invoice.date.toLocaleDateString("th")}</p>
               </div>
-              <div>
-                <div className="left">
-                  <p>หมายเลขใบสั่งซื้อ</p>
-                  <p>P/O No.</p>
-                </div>
-                <p>{invoice.po}</p>
-              </div>
-              <div>
+              {/* <div>
                 <div className="left">
                   <p>เครดิต :</p>
                   <p>Credit</p>
@@ -150,30 +132,17 @@ async function Paper({ no = "", c = false }) {
                     ? invoice.contact.credit + " วัน"
                     : ""}
                 </p>
-              </div>
-              <div>
-                <div className="left">
-                  <p>ครบกำหนด :</p>
-                  <p>Due Date</p>
-                </div>
-                <p>
-                  {plusDate(
-                    invoice.date,
-                    invoice.credit || invoice.contact.credit
-                  ).toLocaleDateString("th")}
-                </p>
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className="detail invoice">
+          <div className="detail qt">
             <div className="header row">
               <div>ลำดับ</div>
               <div>รายการสินค้า</div>
-              <div>จำนวน</div>
+              {/* <div>จำนวน</div> */}
               <div>หน่วย</div>
               <div>ราคาต่อหน่วย</div>
-              <div>ส่วนลด</div>
-              <div>จำนวนเงิน (บาท)</div>
+              {/* <div>จำนวนเงิน (บาท)</div> */}
             </div>
 
             {invoice.InvoiceDetail.map((item, index) => {
@@ -193,30 +162,18 @@ async function Paper({ no = "", c = false }) {
                   <div>{itemId}</div>
                   <div className="itemName">
                     <div>{item.name}</div>
-                    <div className="right">{item.vat ? "V " : "N "}</div>
+                    {/* <div className="right">{item.vat ? "V " : "N "}</div> */}
                   </div>
-                  <div>{item.amount.toFixed(3)}</div>
+                  {/* <div>{item.amount.toFixed(3)}</div> */}
                   <div>{item.product.unit.name}</div>
                   <div>{number.format(Number(item.price))}</div>
-                  <div>{item.discount} %</div>
-                  <div>{number.format(pricev)}</div>
                 </div>
               );
             })}
-            <div className="total row">
+            {/* <div className="total row">
               <div></div>
               <div>ราคาสินค้าไม่รวมภาษี</div>
               <div>{number.format(sum - sumVat)}</div>
-            </div>
-            <div className="total row">
-              <div></div>
-              <div>ส่วนลด</div>
-              <div>{number.format(sumDis)}</div>
-            </div>
-            <div className="total row">
-              <div></div>
-              <div>ราคาสินค้าหลังหักส่วนลด</div>
-              <div>{number.format(sum - sumVat - sumDis)}</div>
             </div>
             <div className="total row">
               <div></div>
@@ -226,44 +183,33 @@ async function Paper({ no = "", c = false }) {
               </div>
               <div>{number.format(sumVat)}</div>
             </div>
-            {/* <div className="total row">
-              <div></div>
-              <div>ปัดเศษ</div>
-              <div>
-                {number.format(sum - sumDis - Math.floor(sum - sumDis))}
-              </div>
-            </div> */}
             <div className="total row">
               <div></div>
               <div className="nettotal">
                 <div>({bahttext(sum - sumDis)})</div>
                 <div>ยอดรวมสุทธิ</div>
               </div>
-              <div className="nettotal">
-                {number.format(Math.floor(sum - sumDis))}
-              </div>
-            </div>
+              <div className="nettotal qt">{number.format(sum - sumDis)}</div>
+            </div> */}
           </div>
         </div>
 
         <div className="remark">
-          {/* <p>{invoice.remark ? "หมายเหตุ : " + invoice.remark : ""}</p> */}
-          <p>วิธีการชำระเงิน : {process.env.NEXT_PUBLIC_company_payment} </p>
+          {/* <p>{invoice.remark ? "หมายเหตุ : " + invoice.remark : ""}</p>
+          <p>วิธีการชำระเงิน : {process.env.NEXT_PUBLIC_company_payment} </p> */}
         </div>
 
-        <div className="footer">
-          <div className="box">
+        <div className="footer qt">
+          {/* <div className="box">
             <div>ผู้ส่งสินค้า :</div>
             <div></div>
             <div>วันที่ : </div>
-            {/* <div>เวลา : </div> */}
           </div>
           <div className="box">
             <div>ผู้รับสินค้า :</div>
             <div></div>
             <div>วันที่ : </div>
-            {/* <div>เวลา : </div> */}
-          </div>
+          </div> */}
           <div className="box">
             <div>ผู้อนุมัติ :</div>
             <div className="sign">
@@ -290,7 +236,6 @@ export default function Page({ params }) {
   return (
     <div>
       <Paper no={params.no} c />
-      <Paper no={params.no} />
     </div>
   );
 }

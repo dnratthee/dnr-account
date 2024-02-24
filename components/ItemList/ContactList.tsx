@@ -1,10 +1,18 @@
 import Link from "next/link";
 import { number, plusDate } from "~/lib/utils/formatter";
+import Sqids from "Sqids";
 
 import dynamic from "next/dynamic";
 const SearchBox = dynamic(() => import("~/components/SearchBox"), {
   ssr: false,
 });
+
+const sqids = new Sqids({
+  alphabet: process.env.SQIDS,
+  minLength: 5,
+});
+
+console.log();
 
 export default ({ list, searchParams }) => {
   return (
@@ -24,7 +32,7 @@ export default ({ list, searchParams }) => {
               {/* <div className="td box">
             <input type="checkbox" />
           </div> */}
-              <Link href={`/contacts/${data.id}`}>
+              <Link href={`/contacts/${sqids.encode([data.id])}`}>
                 <div className="td"></div>
                 <div className="td">{data.name}</div>
                 {/* <div className="td"></div> */}
